@@ -1,0 +1,30 @@
+{
+  "name": "express-nextjs-migration",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/server.tsx",
+    "build": "tsc && webpack --mode production",
+    "dev": "nodemon --exec ts-node src/server.tsx"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node-fetch": "^2.6.11",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "nodemon": "^2.0.15",
+    "ts-loader": "^9.2.6",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1"
+  }
+}
