@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Pokemon } from '../types/pokemon';
-import Link from 'next/link';
 
 interface ListProps {
   pokemons?: Pokemon[];
@@ -28,7 +27,7 @@ const List: React.FC<ListProps> = ({ pokemons: initialPokemons }) => {
       {pokemons.map((pokemon, index) => (
         <li key={index}>
           <h2>
-            <Link href={`/pokemon/${pokemon.name}`}>{pokemon.name}</Link>
+            <a href={`/pokemon/${pokemon.name}`}>{pokemon.name}</a>
           </h2>
         </li>
       ))}
