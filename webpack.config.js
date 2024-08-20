@@ -13,7 +13,12 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: {
+          loader: 'ts-loader',
+          options: {
+            configFile: 'tsconfig-legacy.json',
+          },
+        },
         exclude: /node_modules/,
       },
     ],

@@ -7,17 +7,17 @@ interface PokemonDetailsProps {
 }
 
 const PokemonDetails: React.FC<PokemonDetailsProps> = ({ pokemon: initialPokemon }) => {
-  const { id } = useParams<{ id: string }>();
+  const params = useParams<{ id: string }>();
   const [pokemon, setPokemon] = useState<Pokemon | null>(initialPokemon || null);
 
   useEffect(() => {
-    if (!pokemon) {
-      fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+    if (!pokemon && params.id) {
+      fetch(`https://pokeapi.co/api/v2/pokemon/${params.id}`)
         .then(response => response.json())
         .then(data => setPokemon(data))
         .catch(error => console.error('Error fetching pokemon details:', error));
     }
-  }, [id, pokemon]);
+  }, [params.id, pokemon]);
 
   if (!pokemon) {
     return <div>Loading...</div>;

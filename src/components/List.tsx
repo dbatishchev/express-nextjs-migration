@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Pokemon } from '../types/pokemon';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 interface ListProps {
   pokemons?: Pokemon[];
@@ -28,7 +28,7 @@ const List: React.FC<ListProps> = ({ pokemons: initialPokemons }) => {
       {pokemons.map((pokemon, index) => (
         <li key={index}>
           <h2>
-            <Link to={`/pokemon/${pokemon.name}`}>{pokemon.name}</Link>
+            <Link href={`/pokemon/${pokemon.name}`}>{pokemon.name}</Link>
           </h2>
         </li>
       ))}

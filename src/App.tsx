@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-import Main from './pages/Main';
-import About from './pages/About';
-import List from './pages/List';
-import PokemonDetails from './pages/PokemonDetails';
+import Main from './components/Main';
+import About from './components/About';
+import List from './components/List';
+import PokemonDetails from './components/PokemonDetails';
 import { Pokemon } from './types/pokemon';
 
 interface AppProps {

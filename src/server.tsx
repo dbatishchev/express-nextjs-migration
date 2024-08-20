@@ -6,6 +6,17 @@ import App from './App';
 import fetch from 'node-fetch';
 import { Pokemon } from './types/pokemon';
 import { matchPath } from 'react-router-dom';
+import next from 'next';
+
+const dev = process.env.NODE_ENV !== 'production';
+const nextApp = next({ 
+  dev, 
+  dir: '.', 
+  conf: {
+
+  }
+});
+const handle = nextApp.getRequestHandler();
 
 const app = express();
 const port = 3000;
@@ -18,50 +29,52 @@ async function fetchPokemonList() {
   return data.results;
 }
 
-async function fetchPokemonDetails(id: string) {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-  return await response.json();
-}
+nextApp.prepare().then(() => {
 
-app.get('*', async (req, res) => {
-  let initialData = {};
+  // this is necessary to handle next.js files
+  app.all('/_next/*', (req, res) => {
+    return handle(req, res);
+  });
 
-  const listMatch = matchPath('/list', req.path);
-  const detailsMatch = matchPath('/pokemon/:id', req.path);
+  // this route is handled by next.js
+  app.get('/pokemon/:id', (req, res) => {
+    return handle(req, res);
+  });
 
-  if (listMatch) {
-    initialData = { pokemons: await fetchPokemonList() };
-  } else if (detailsMatch) {
-    const { id } = detailsMatch.params;
-    if (!id) {
-      return res.status(404).send('Not found');
+  // everything else is handled by express
+  app.get('*', async (req, res) => {
+    let initialData = {};
+
+    const listMatch = matchPath('/list', req.path);
+
+    if (listMatch) {
+      initialData = { pokemons: await fetchPokemonList() };
     }
-    initialData = { pokemon: await fetchPokemonDetails(id) };
-  }
 
-  const app = ReactDOMServer.renderToString(
-    <StaticRouter location={req.url}>
-      <App initialData={initialData} />
-    </StaticRouter>
-  );
+    const app = ReactDOMServer.renderToString(
+      <StaticRouter location={req.url}>
+        <App initialData={initialData} />
+      </StaticRouter>
+    );
 
-  const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>SSR React App</title>
-      </head>
-      <body>
-        <div id="root">${app}</div>
-        <script>window.__INITIAL_DATA__ = ${JSON.stringify(initialData)}</script>
-        <script src="/bundle.js"></script>
-      </body>
-    </html>
-  `;
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>SSR React App</title>
+        </head>
+        <body>
+          <div id="root">${app}</div>
+          <script>window.__INITIAL_DATA__ = ${JSON.stringify(initialData)}</script>
+          <script src="/bundle.js"></script>
+        </body>
+      </html>
+    `;
 
-  res.send(html);
-});
+    res.send(html);
+  });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
 });
